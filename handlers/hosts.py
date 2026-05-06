@@ -226,7 +226,7 @@ class HostHandler(BaseHandler):
 
         # Method 2: Fallback using host collections endpoint
         try:
-            self.logger.debug("Trying fallback method: host collections")
+            self.logger.info("Trying fallback method: host collections")
             result = self.client.get("domain-types/host/collections/all")
 
             if result.get("success"):
@@ -268,7 +268,7 @@ class HostHandler(BaseHandler):
                     # Host not found in collections
                     return self.error_response("Host not found", f"Host '{host_name}' not found in host collections")
         except Exception as e:
-            self.logger.debug(f"Fallback method failed: {e}")
+            self.logger.info(f"Fallback method failed: {e}")
 
         # Method 3: Final fallback - check if host exists in configuration
         try:
@@ -294,7 +294,7 @@ class HostHandler(BaseHandler):
             else:
                 return self.error_response("Host not found", f"Host '{host_name}' not found in CheckMK")
         except Exception as e:
-            self.logger.debug(f"Host config check failed: {e}")
+            self.logger.info(f"Host config check failed: {e}")
 
         # If all methods failed, return comprehensive error information
         return [
