@@ -86,6 +86,7 @@ class ServiceHandler(BaseHandler):
             params = {}
             if host_name:
                 params["host_name"] = host_name
+                params["columns"] = ["host_name", "description", "state"]
 
             result = self.client.get("domain-types/service/collections/all", params=params)
 
