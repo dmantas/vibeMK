@@ -90,7 +90,7 @@ class HostHandler(BaseHandler):
         if not host_name:
             return self.error_response("Missing parameter", "host_name is required")
 
-        self.logger.debug(f"Getting host status for: {host_name} (using correct API method)")
+        self.logger.info(f"Getting host status for: {host_name} (using correct API method)")
 
         # Method 1: Use the documented CheckMK API with columns parameter
         # This is the correct approach similar to the service status fix
@@ -111,7 +111,7 @@ class HostHandler(BaseHandler):
             }
 
             result = self.client.get(f"objects/host/{host_name}", params=params)
-            self.logger.debug(f"Host status API result: {result}")
+            self.logger.info(f"Host status API result: {result}")
 
             if result.get("success"):
                 data = result.get("data", {})
@@ -227,9 +227,10 @@ class HostHandler(BaseHandler):
         # Method 2: Fallback using host collections endpoint
         try:
             self.logger.info("Trying fallback method: host collections")
-            result = self.client.get("domain-types/host/collections/all")
+            result = self.client.get("domain-types/host/collections/all", params=params)
 
             if result.get("success"):
+                self.logger.info("Successfully retrieved host collections data")
                 data = result.get("data", {})
                 if "value" in data:
                     hosts = data["value"]
